@@ -1,9 +1,9 @@
 <p>
-<h1 align="center" style="font-size: 32px;"> <font size="1">(better) </font>SC Downloader</h1>
+<h1 align="center" style="font-size: 32px;"> <sub><sup>(better)</sup></sub> SC Downloader</h1>
 </p>
 
-## Description
-File downloader for all  <font size="0">(probably) </font> games from Supercell. It directly receives all the latest data from the server and downloads it.  
+### Description
+File downloader for all  <sub><sup>(probably)</sup></sub> games from Supercell. It directly receives all the latest data from the server and downloads it.  
 [This sc-downloader by vorono4ka was used as a base](https://github.com/Vorono4ka/sc-downloader), some code from it is still here. But it has been greatly improved:
 - Added support for latest game servers iterations
 - Added threading to improve downloading speed
