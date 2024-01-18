@@ -12,7 +12,11 @@ File downloader for all  <sub><sup>(probably)</sup></sub> games from Supercell. 
 
 ### HOW TO USE
 You need to have at least Python 3.9 for this to work.  
-Basic usage is very simple, just run script in cmd with a command like
+If you want to run script for the first time, then install all modules with this command in cmd
+```
+pip install -r requirements.txt
+```
+Basic usage is very simple, just run script with a command like
 ```
 py main.py
 ```
