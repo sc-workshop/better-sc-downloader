@@ -13,7 +13,7 @@ class Config:
         data: dict = json.load(file)
         file.close()
 
-        self.server_specific_data: dict = data["server_specific_data"]
+        # self.server_specific_data: dict = data["server_specific_data"]
         self.save_dump = True if data.get("save_dump") else False
         self.auto_update = True if data.get("auto_update") else False
         self.make_patches = True if data.get("make_patches") else False
