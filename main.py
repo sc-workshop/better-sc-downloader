@@ -181,6 +181,7 @@ class ScDownloader:
         """
         client_latest = self.get_latest_client()
         is_different = False in [client_latest.content_version[i] <= self.client.content_version[i] for i in range(3)]
+        # print(f"Current version is {client_latest.content_version}, Server Version is {self.client.content_version}")
         return (is_different, client_latest)
 
     def make_update(self, latest_client: Client or None = None) -> None:
@@ -280,34 +281,40 @@ class ScDownloader:
         move_files(new_files, new_patch_path if self.config.make_detailed_patches else patch_path)          # New Files Copy
         move_files(changed_files, changed_patch_path if self.config.make_detailed_patches else patch_path)  # Changed Files Copy
 
+    def make_connect(self) -> bool:
+        status = self.client.connect(self.active_server.server_address)
+            
+        if status == HelloServerResponse.Success:
+            print(f"Successfully connected to {self.active_server.short_name}")
+            return True
+        elif status == HelloServerResponse.NeedUpdate:
+            print(
+                f"Successfully connected to {self.active_server.short_name} but server requires update. Updating..."
+            )
+            self.make_update()
+            return True
+            
+        return False
+    
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         """
         The function checks if the client is connected to a server, updates the server if necessary,
         downloads assets if it's the first connection, and checks for updates and downloads them if
         requested.
         """
-
-        if not self.client.fingerprint or self.config.repair:
-            status = self.client.connect(self.active_server.server_address)
-            
-            if status == HelloServerResponse.Success:
-                print(f"Successfully connected to {self.active_server.short_name}")
-            elif status == HelloServerResponse.NeedUpdate:
-                print(
-                    f"Successfully connected to {self.active_server.short_name} but server requires update. Updating..."
-                )
-                self.make_update()
-                return
-
-
+        
         major, _, _ = self.client.content_version
 
         # Downloading from scratch
         if major == 0: 
             print("Detected first connection. This can take a little bit long time. Downloading all assets...")
+            if (not self.make_connect()): return
             self.download_all()
             return
-        
+
+        if not self.client.fingerprint:
+            if (not self.make_connect()): return
+
         # User hash handling
         if (self.config.custom_hash): 
             print(f"Downloading assets using hash {self.config.custom_hash}")

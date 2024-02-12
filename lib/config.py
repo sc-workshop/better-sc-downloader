@@ -1,12 +1,11 @@
 import json
 import argparse
-
+from enum import Enum
 
 class ServerDescriptor:
     def __init__(self, name: str = "", address: str = "") -> None:
         self.short_name = name
         self.server_address = address
-
 
 class Config:
     def __init__(self, filepath: str) -> None:
@@ -14,6 +13,7 @@ class Config:
         data: dict = json.load(file)
         file.close()
 
+        self.server_specific_data: dict = data["server_specific_data"]
         self.save_dump = True if data.get("save_dump") else False
         self.auto_update = True if data.get("auto_update") else False
         self.make_patches = True if data.get("make_patches") else False
@@ -66,6 +66,14 @@ class Config:
 
         self.strict_repair: bool = args.strict_repair_mode
         self.repair: bool = args.repair_mode or self.strict_repair
+        
+        # Server specific variables
+        self.status_code_size = 4 # int
+        self.variable_schema: list = []
 
         for server in servers_data:
             self.servers.append(ServerDescriptor(server, servers_data[server]))
+            
+    def load_server_specific_data(self, name: str) -> None:
+        data = self.server_specific_data
+        pass
